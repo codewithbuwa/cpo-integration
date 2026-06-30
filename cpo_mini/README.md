@@ -11,11 +11,13 @@ also go wrong at LLM scale, just slower and more expensively.
 ## Install
 
 ```bash
-pip install torch transformers datasets
+# from the repo root, on Python 3.12
+python3.12 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt        # torch, transformers, datasets (pinned)
 ```
 
-PyTorch will use the MPS backend automatically on M-series Macs. fp32 throughout;
-bf16 has gaps on MPS.
+PyTorch will use the MPS backend automatically on M-series Macs (and CUDA on a
+GPU box). fp32 throughout; bf16 has gaps on MPS.
 
 ## Default model and footprint
 
@@ -142,8 +144,9 @@ offline, save as a sidecar `{prompt_id: cluster_id}` JSON, and add a
 
 ## Known M1 caveats
 
-- First run is slow (`datasets` downloads UltraFeedback ~100 MB, then HF caches
-  the SmolLM2 weights ~270 MB). Subsequent runs hit the cache.
+- First run is slow: `datasets` downloads UltraFeedback (all splits, ~hundreds of
+  MB) and HF caches the SmolLM2 weights (~540 MB fp32). Subsequent runs hit the
+  cache and start in seconds.
 - `scatter_add_` on MPS is supported but occasionally falls back to CPU silently.
   If you see warnings, ignore them — correctness is unaffected.
 - `torch.compile` is not currently reliable on MPS; this script doesn't use it.
