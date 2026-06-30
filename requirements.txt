@@ -1,0 +1,11 @@
+# Python 3.12. Create the environment with:
+#   python3.12 -m venv .venv && source .venv/bin/activate
+#   pip install -r requirements.txt
+#
+# Direct dependencies for the cpo_mini prototype and loss tests.
+# (train/ mounts on HALOs, which brings its own accelerate/FSDP stack.)
+# Versions pinned to a known-good resolution on macOS / Python 3.12.
+
+torch==2.12.1
+transformers==5.12.1
+datasets==5.0.0

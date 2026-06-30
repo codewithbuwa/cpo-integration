@@ -1,0 +1,31 @@
+# Cluster-referenced Preference Optimization — Stage 1 (unary, alpha = 0).
+#
+# Reproduces KTO exactly when num_clusters = 1 (and ema_tau = null).
+
+# Sigmoid temperature (same role as in KTO/DPO).
+beta: 0.1
+
+trainer: CPOTrainer
+
+dataloader: UnpairedPreferenceDataLoader
+
+# Class weights for imbalanced desirable/undesirable counts.
+desirable_weight: 1.0
+undesirable_weight: 1.0
+
+# Number of clusters K. Use 1 to reproduce KTO; larger K activates the
+# per-cluster z_k mechanism. Each example's cluster_id must lie in [0, K).
+num_clusters: 8
+
+# Optional sidecar mapping {prompt_id -> cluster_id}. If null, all examples
+# fall into cluster 0 (which means K should be 1).
+cluster_map_path: null
+
+# Reference-model update. The HALOs train loop fires sync_reference_with_policy()
+# every step when sync_reference is true. CPOTrainer overrides that method to
+# do an in-place EMA when ema_tau is set:
+#   sync_reference: false               -> reference is frozen at SFT init
+#   sync_reference: true,  ema_tau: null -> HALOs-style hard sync every step
+#   sync_reference: true,  ema_tau: 0.001 -> true EMA (recommended)
+sync_reference: false
+ema_tau: null

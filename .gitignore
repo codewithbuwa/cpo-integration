@@ -1,0 +1,14 @@
+# Python virtual environment
+.venv/
+
+# Python caches
+__pycache__/
+*.py[cod]
+
+# Training run outputs / logs
+runs/
+*.out
+*.err
+
+# macOS
+.DS_Store
